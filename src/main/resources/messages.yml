@@ -1,6 +1,46 @@
-prefix: '&8[&aEnhancedGroups&8] &r'
-voicechat_unavailable: '&cVoice chat is not currently connected.'
+# Messages use '&' colour codes. {placeholders} are filled in by the plugin.
+# Any key you delete falls back to the built-in default. Run /voicegroupmanager reload to apply changes.
+prefix: '&8[&aVoice Group Manager&8] &r'
+
+# General
+voicechat_unavailable: '&cVoice chat is not currently connected, or you are not connected to it.'
 player_only: '&cThis command can only be used by a player.'
+player_offline: '&cThat player is not online.'
 no_permission: '&cYou do not have permission to do that.'
 group_not_found: '&cPersistent group not found.'
 usage: '&cUsage: {usage}'
+reloaded: '&aConfiguration and messages reloaded.'
+
+# /instantgroup
+invalid_range: '&cRange must be a number of at least 1.'
+instant_invalid_name: '&cInvalid instant_group_name in config.yml.'
+instant_created: '&aAdded {count} player(s) to {group}.'
+instant_existing: '&aAdded {count} player(s) to {group} (your current group).'
+
+# /persistentgroup
+persistent_none: 'There are no persistent groups.'
+persistent_entry: '&f{group} &7({type}{flags}) &8ID: {id}'
+persistent_created: '&aCreated persistent group {group} (ID {id}).'
+persistent_duplicate: '&cA persistent group named {group} already exists.'
+persistent_create_failed: '&cCould not create group: {error}'
+persistent_removed: '&aRemoved {group}.'
+persistent_remove_failed: '&cCould not remove group; it may still have members.'
+
+# /autojoingroup
+autojoin_personal_set: '&aYou will auto-join {group}.'
+autojoin_personal_removed: '&aPersonal auto-join removed.'
+autojoin_wrong_password: '&cWrong password.'
+autojoin_global_set: '&aGlobal auto-join group set to {group}.'
+autojoin_global_removed: '&aGlobal auto-join removed.'
+autojoin_global_password: '&cGlobal auto-join groups cannot have a password.'
+autojoin_force_set: '&aForced global auto-join set to {value}.'
+
+# /forcejoingroup
+forcejoin_not_in_group: '&cYou are not connected to voice chat or not in a group.'
+forcejoin_target_not_connected: '&cThat player is not connected to voice chat.'
+forcejoin_moved: '&aMoved {player} into your group.'
+
+# Join summary
+summary_header: '&7There are currently {count} player(s) in voice groups:'
+summary_entry: '&8- &7{group}'
+summary_join: '&a[Join]'

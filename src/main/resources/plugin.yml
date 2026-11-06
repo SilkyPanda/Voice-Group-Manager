@@ -1,35 +1,56 @@
-name: EnhancedGroups
+name: VoiceGroupManager
 version: '${version}'
-main: dev.enhancedgroups.EnhancedGroupsPlugin
+main: dev.voicegroupmanager.VoiceGroupManagerPlugin
 api-version: '26.3'
 depend: [voicechat]
-description: Server-side group management for Simple Voice Chat
+description: Server-side voice group management for Simple Voice Chat
 commands:
+  voicegroupmanager:
+    description: Manage the Voice Group Manager plugin
+    usage: /voicegroupmanager reload
+    aliases: [vgm]
+    permission: voicegroupmanager.reload
   instantgroup:
     description: Create or join an instant voice group with nearby players
     usage: /instantgroup [range]
-    permission: enhancedgroups.instantgroup
+    permission: voicegroupmanager.instantgroup
   persistentgroup:
     description: Manage persistent voice groups
     usage: /persistentgroup <list|add|remove> [arguments]
-    permission: enhancedgroups.persistentgroup
+    permission: voicegroupmanager.persistentgroup
   autojoingroup:
     description: Configure personal or global automatic group joining
     usage: /autojoingroup <set|remove|global> [arguments]
   forcejoingroup:
     description: Move a player into your current voice group
     usage: /forcejoingroup <player>
-    permission: enhancedgroups.forcejoingroup
+    permission: voicegroupmanager.forcejoingroup
 permissions:
-  enhancedgroups.admin:
+  voicegroupmanager.admin:
+    description: Grants every Voice Group Manager permission, regardless of the defaults in config.yml
     default: op
-  enhancedgroups.instantgroup:
+    children:
+      voicegroupmanager.instantgroup: true
+      voicegroupmanager.persistentgroup: true
+      voicegroupmanager.autojoingroup: true
+      voicegroupmanager.autojoingroup.global: true
+      voicegroupmanager.forcejoingroup: true
+      voicegroupmanager.reload: true
+  voicegroupmanager.instantgroup:
+    description: Use /instantgroup
     default: true
-  enhancedgroups.persistentgroup:
+  voicegroupmanager.persistentgroup:
+    description: Use /persistentgroup
     default: op
-  enhancedgroups.autojoingroup:
+  voicegroupmanager.autojoingroup:
+    description: Use /autojoingroup for yourself
     default: true
-  enhancedgroups.autojoingroup.global:
+  voicegroupmanager.autojoingroup.global:
+    description: Use /autojoingroup global
     default: op
-  enhancedgroups.forcejoingroup:
+  voicegroupmanager.forcejoingroup:
+    description: Use /forcejoingroup
+    default: op
+  voicegroupmanager.reload:
+    description: Use /voicegroupmanager reload
     default: op

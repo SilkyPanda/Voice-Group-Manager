@@ -28,7 +28,7 @@ jobs:
       - name: Upload plugin jar
         uses: actions/upload-artifact@v4
         with:
-          name: EnhancedGroups-${{ github.sha }}
-          path: build/libs/EnhancedGroups-*.jar
+          name: VoiceGroupManager-${{ github.sha }}
+          path: build/libs/VoiceGroupManager-*.jar
           if-no-files-found: error
           retention-days: 30

@@ -1,28 +1,37 @@
 plugins {
     id 'java'
+    // Downloads and starts a real Paper server with this plugin installed (see "Testing" in README).
+    id 'xyz.jpenilla.run-paper' version '3.0.2'
 }
 
 group = 'dev.voicegroupmanager'
-version = '1.1.0'
+version = '1.2.0'
 
+// The jar is compiled for Java 21 (the Java used by Minecraft 1.21.x servers). Java 25 servers
+// (Minecraft 26.x) run Java 21 class files without problems, so ONE jar covers every supported version.
+// The build itself still runs on a JDK 25 toolchain; `release = 21` stops the code from using
+// anything newer than Java 21.
 java {
     toolchain { languageVersion = JavaLanguageVersion.of(25) }
 }
 
 repositories {
     mavenCentral()
-    maven { url = 'https://repo.purpurmc.org/snapshots' }
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
 }
 
 dependencies {
-    compileOnly 'org.purpurmc.purpur:purpur-api:26.3.build.2643-experimental'
+    // Compile against the OLDEST supported Minecraft version. That way the compiler rejects any API
+    // call that does not exist on 1.21.1, and newer servers keep running the same jar.
+    // Purpur is a Paper fork, so the Paper API covers both servers.
+    compileOnly 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
     compileOnly 'de.maxhenkel.voicechat:voicechat-api:2.6.0'
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 25
+    options.release = 21
 }
 
 processResources {
@@ -31,4 +40,31 @@ processResources {
 
 jar {
     archiveBaseName = 'VoiceGroupManager'
+}
+
+// ---------------------------------------------------------------------------------------------
+// Testing on different Minecraft versions
+//
+//   ./gradlew runServer -PmcVersion=1.21.1
+//   ./gradlew runServer -PmcVersion=26.3
+//
+// Each version gets its own folder (run/<version>), so worlds and configs are kept between runs.
+// The first start of a version stops by itself until eula.txt in that folder says eula=true
+// (https://aka.ms/MinecraftEULA), or you pass -Dcom.mojang.eula.agree=true yourself.
+// Simple Voice Chat is downloaded automatically; override with -PsvcVersion=<Modrinth version number>.
+// ---------------------------------------------------------------------------------------------
+def testMcVersion = providers.gradleProperty('mcVersion').getOrElse('26.3')
+def testSvcVersion = providers.gradleProperty('svcVersion').getOrElse('bukkit-2.6.24')
+// 1.x servers need Java 21; the year-based 26.x servers need Java 25.
+def testJavaVersion = testMcVersion.startsWith('1.') ? 21 : 25
+
+runServer {
+    minecraftVersion(testMcVersion)
+    runDirectory = layout.projectDirectory.dir("run/${testMcVersion}")
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(testJavaVersion)
+    }
+    downloadPlugins {
+        modrinth('simple-voice-chat', testSvcVersion)
+    }
 }

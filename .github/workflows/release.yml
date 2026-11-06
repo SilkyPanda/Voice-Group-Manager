@@ -1,0 +1,98 @@
+name: Release
+
+# Publishes to GitHub Releases and Modrinth when you push a tag like v1.2.0.
+#   git tag v1.2.0 && git push origin v1.2.0
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write   # needed to create the GitHub release
+
+env:
+  # Every Minecraft version this jar is meant to run on. Modrinth rejects unknown versions,
+  # so add new ones (for example 26.3.1) here as they come out and have been tested.
+  GAME_VERSIONS: >-
+    ["1.21.1","1.21.2","1.21.3","1.21.4","1.21.5","1.21.6","1.21.7","1.21.8","1.21.9","1.21.10","1.21.11",
+     "26.1","26.1.1","26.1.2","26.2","26.3"]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.5.1'
+
+      - name: Check tag matches build.gradle version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          GRADLE_VERSION=$(sed -n "s/^version = '\(.*\)'/\1/p" build.gradle)
+          if [ "$TAG_VERSION" != "$GRADLE_VERSION" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match build.gradle version $GRADLE_VERSION" >&2
+            exit 1
+          fi
+          echo "VERSION=$TAG_VERSION" >> "$GITHUB_ENV"
+
+      - name: Build
+        run: gradle clean build
+
+      - name: Extract changelog for this version
+        run: |
+          # Takes the "## Voice Group Manager <version>" section out of changelog.md.
+          awk -v v="$VERSION" '
+            $0 ~ "^## Voice Group Manager " v "$" { on=1; next }
+            on && /^## / { exit }
+            on { print }
+          ' changelog.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "No changelog section found for $VERSION in changelog.md" >&2
+            exit 1
+          fi
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/libs/VoiceGroupManager-${{ env.VERSION }}.jar
+          body_path: release-notes.md
+
+      - name: Upload to Modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT_ID: ${{ vars.MODRINTH_PROJECT_ID }}
+        run: |
+          JAR="VoiceGroupManager-${VERSION}.jar"
+          jq -n \
+            --arg project "$MODRINTH_PROJECT_ID" \
+            --arg version "$VERSION" \
+            --arg name "Voice Group Manager ${VERSION}" \
+            --rawfile changelog release-notes.md \
+            --argjson games "$GAME_VERSIONS" \
+            --arg file "$JAR" \
+            '{
+              project_id: $project,
+              version_number: $version,
+              name: $name,
+              changelog: $changelog,
+              version_type: "release",
+              game_versions: $games,
+              loaders: ["paper", "purpur"],
+              featured: true,
+              dependencies: [{ project_id: "9eGKb6K1", dependency_type: "required" }],
+              file_parts: ["file"],
+              primary_file: "file"
+            }' > modrinth-data.json
+
+          curl --fail-with-body -sS \
+            -H "Authorization: $MODRINTH_TOKEN" \
+            -H "User-Agent: ${GITHUB_REPOSITORY}/${VERSION} (GitHub Actions)" \
+            -F "data=<modrinth-data.json;type=application/json" \
+            -F "file=@build/libs/${JAR}" \
+            https://api.modrinth.com/v2/version

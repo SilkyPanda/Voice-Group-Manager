@@ -1,0 +1,42 @@
+name: Smoke test (manual)
+
+# Starts a real server per Minecraft version with Simple Voice Chat + this plugin and checks that the
+# plugin enables. Run it by hand from the Actions tab before a release.
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: ['1.21.1', '1.21.4', '1.21.11', '26.1.2', '26.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            21
+            25
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.5.1'
+      - name: Boot a ${{ matrix.mc }} server
+        run: |
+          # Setting this property means you accept the Minecraft EULA: https://aka.ms/MinecraftEULA
+          : > server.log
+          ( for i in $(seq 1 120); do
+              grep -q 'Done (' server.log && break
+              sleep 3
+            done
+            sleep 5
+            echo stop ) | gradle runServer -PmcVersion=${{ matrix.mc }} \
+              -Dcom.mojang.eula.agree=true --console=plain \
+              -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64 2>&1 | tee server.log
+      - name: Check the plugin enabled
+        run: |
+          grep -q 'Voice Group Manager enabled' server.log
+          ! grep -q 'Could not load' server.log

@@ -4,9 +4,10 @@ Voice Group Manager adds server-side management for [Simple Voice Chat](https://
 
 ## Requirements
 
-- Minecraft **26.3** server.
-- The **Bukkit** version of Simple Voice Chat **2.6.24 or newer**, installed on the server.
-- Spigot is not a supported target.
+- A **Paper** or **Purpur** server running Minecraft **1.21.1 through 26.3**.
+- **Java 21** or newer for Minecraft 1.21.x servers, **Java 25** for Minecraft 26.x servers (the Java your server already requires).
+- The **Bukkit** version of Simple Voice Chat **2.6.24 or newer**, installed on the server, in a build that supports your Minecraft version.
+- Spigot and Folia are not supported.
 
 Players do not install Voice Group Manager. Players who want to use voice chat still need a compatible Simple Voice Chat client; clients using SVC-supported mod loaders can connect. Players without the SVC client can join Minecraft, but cannot use voice chat or voice-group features.
 
@@ -54,6 +55,20 @@ The default permission level of each command node is configurable in `config.yml
 
 Persistent-group passwords are stored in plain text so the plugin can restore groups and use passwords for auto-join. Restrict access to the plugin data folder accordingly.
 
-## Credits
+## Building and testing
 
-Inspired by an existing Fabric mod for managing Simple Voice Chat groups; thanks to its original author. See the [original project](https://modrinth.com/mod/enhanced-groups). Voice Group Manager is a separate server-side plugin and players do not need that mod.
+The plugin is one jar for every supported version. It is compiled for Java 21 against the Paper 1.21.1 API, so it cannot use anything that is missing on the oldest supported version.
+
+```
+./gradlew build                          # jar in build/libs
+./gradlew runServer -PmcVersion=1.21.1   # start a Paper test server with Simple Voice Chat + this plugin
+./gradlew runServer -PmcVersion=26.3
+```
+
+Each version gets its own folder under `run/`. On the first start, accept the [Minecraft EULA](https://aka.ms/MinecraftEULA) in that folder's `eula.txt`.
+
+## License & Credits
+
+* Ported to Paper by **SilkyPanda** with permission from the original author.
+* Original Fabric mod: [Simple Voice Chat Enhanced Groups](https://github.com/henkelmax/enhanced-groups) by **Max Henkel (henkelmax)**.
+* Licensed under the **GNU General Public License v3.0** (GPLv3). See the `LICENSE` file for details.

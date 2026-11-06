@@ -1,3 +1,14 @@
+## Voice Group Manager 1.2.0
+
+One jar, many versions: Voice Group Manager now supports Minecraft **1.21.1 through 26.3** on Paper and Purpur.
+
+### Upgrade notes
+- Drop-in update from 1.1.0; no config changes.
+- Minecraft 1.21.x servers need Java 21, 26.x servers need Java 25 (the same Java your server already needs).
+
+### New
+- Runs on Minecraft 1.21.1 up to 26.3 with a single download. Previously only 26.3 was supported.
+
 ## Voice Group Manager 1.1.0
 
 Same plugin, new name: it is now called **Voice Group Manager**.

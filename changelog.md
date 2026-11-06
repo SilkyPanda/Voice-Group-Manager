@@ -1,11 +1,8 @@
 ## Voice Group Manager 1.1.0
 
-Same plugin, new name: it is now **Voice Group Manager**. This release also fixes several bugs and makes the message system actually configurable.
+Same plugin, new name: it is now called **Voice Group Manager**.
 
 ### ⚠️ Upgrade notes
-- The data folder is now `plugins/VoiceGroupManager/` and the JAR is `VoiceGroupManager-<version>.jar`. If you used an earlier build under a previous name, move `config.yml`, `messages.yml`, `persistent-groups.yml` and `auto-join-groups.yml` into the new folder.
-- Permission nodes now start with `voicegroupmanager.` (for example `voicegroupmanager.instantgroup`). Update them in your permissions plugin.
-- `/instantgroup` range is now a true radius (a sphere around the player) instead of a cube, so it no longer reaches players up to ~1.7× further away diagonally.
 
 ### New
 - `/voicegroupmanager reload` (alias `/vgm reload`) reloads `config.yml` and `messages.yml` without a restart. Permission: `voicegroupmanager.reload`.
@@ -22,11 +19,4 @@ Same plugin, new name: it is now **Voice Group Manager**. This release also fixe
 - Invalid `force_group_type` and `permission_defaults` values now log a clear warning instead of failing silently.
 - `/autojoingroup global set <name>` now accepts names with spaces without quotes.
 - Tab completion fixed: correct suggestions at every argument position, names with spaces are quoted automatically, and suggestions are hidden from players without permission.
-
-### Under the hood
-- Persistent groups use one ID both in-session and after restarts, removing an internal ID-mapping table.
-- Removed an internal set that could slowly accumulate entries.
-- Saving is now thread-safe and cleans up its temporary file on failure.
-- The Simple Voice Chat dependency is checked first on startup; one command handler is shared instead of one per command.
-- Replaced deprecated legacy `ChatColor` usage with Adventure.
-- Added a `.gitignore`.
+- `/instantgroup` range is now a true radius (a sphere around the player) instead of a cube, so it no longer reaches players up to ~1.7× further away diagonally.

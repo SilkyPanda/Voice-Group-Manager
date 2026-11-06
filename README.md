@@ -54,6 +54,8 @@ The default permission level of each command node is configurable in `config.yml
 
 Persistent-group passwords are stored in plain text so the plugin can restore groups and use passwords for auto-join. Restrict access to the plugin data folder accordingly.
 
-## Credits
+## License & Credits
 
-Inspired by an existing Fabric mod for managing Simple Voice Chat groups; thanks to its original author. See the [original project](https://modrinth.com/mod/enhanced-groups). Voice Group Manager is a separate server-side plugin and players do not need that mod.
+* Ported to Paper by **SilkyPanda** with permission from the original author.
+* Original Fabric mod: [Simple Voice Chat Enhanced Groups](https://github.com/henkelmax/enhanced-groups) by **Max Henkel (henkelmax)**.
+* Licensed under the **GNU General Public License v3.0** (GPLv3). See the `LICENSE` file for details.

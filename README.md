@@ -4,24 +4,11 @@ Voice Group Manager adds server-side management for [Simple Voice Chat](https://
 
 ## Requirements
 
-- Minecraft **26.3** server. The plugin is built for **Purpur 26.3 build 2643**.
-- **Java 25**.
+- Minecraft **26.3** server.
 - The **Bukkit** version of Simple Voice Chat **2.6.24 or newer**, installed on the server.
-- Paper 26.3 may be compatible, but has not been tested separately. Spigot is not a supported target.
+- Spigot is not a supported target.
 
 Players do not install Voice Group Manager. Players who want to use voice chat still need a compatible Simple Voice Chat client; clients using SVC-supported mod loaders can connect. Players without the SVC client can join Minecraft, but cannot use voice chat or voice-group features.
-
-## Download and install
-
-1. Install the **Bukkit server plugin** version of [Simple Voice Chat](https://modrinth.com/plugin/simple-voice-chat), version **2.6.24 or newer**, for your Minecraft server version. It is a required dependency; the client mod by itself is not enough on the server.
-2. Download the Voice Group Manager JAR from this project's Modrinth page or GitHub **Releases**. If no release is available, download the `VoiceGroupManager-...` artifact from the latest successful **Build plugin** run under **Actions** and extract the JAR from the ZIP.
-3. Put both plugin JARs in the server's `plugins` folder.
-4. Start or restart the server. Voice Group Manager loads after Simple Voice Chat.
-5. Edit `plugins/VoiceGroupManager/config.yml` and `messages.yml`, then run `/voicegroupmanager reload` to apply changes.
-
-The plugin keeps its configuration, messages, saved groups, and auto-join data in `plugins/VoiceGroupManager/`.
-
-> **Upgrading from an earlier build under a previous name?** Stop the server, replace the old JAR with the new one, and move `config.yml`, `messages.yml`, `persistent-groups.yml` and `auto-join-groups.yml` into `plugins/VoiceGroupManager/`. Permission nodes now start with `voicegroupmanager.`, so update them in your permissions plugin.
 
 ## Features
 
@@ -66,16 +53,6 @@ Permission nodes:
 The default permission level of each command node is configurable in `config.yml`: `EVERYONE`, `OPS`, or `NOONE`. A permission plugin can also grant individual nodes. The same file controls the instant-group range and name, group summaries, and forced group type. All text, including the chat prefix, can be changed in `messages.yml`; any key you remove falls back to the built-in default.
 
 Persistent-group passwords are stored in plain text so the plugin can restore groups and use passwords for auto-join. Restrict access to the plugin data folder accordingly.
-
-## Building
-
-You need JDK 25 and Gradle 9.5.1 or newer:
-
-```
-gradle clean build
-```
-
-The plugin JAR is written to `build/libs/VoiceGroupManager-<version>.jar`. The GitHub Actions workflow builds it the same way on every push.
 
 ## Credits
 

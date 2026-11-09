@@ -1,3 +1,29 @@
+## Voice Group Manager 1.3.0
+
+Edit persistent groups in place, see what is going on with `/vgm info`, and a round of fixes that make `/instantgroup` safer.
+
+### ⚠️ Upgrade notes
+- **`/instantgroup` is now operators-only by default.** Your existing `config.yml` keeps its old value, so if you want the new default set `permission_defaults.instantgroup: OPS` and run `/vgm reload`. You can still give the permission to anyone you like.
+- New settings are added to your `config.yml` and `messages.yml` automatically; nothing you changed is touched.
+
+### New
+- `/persistentgroup edit <group> <name|type|hidden|password> <value>` changes a saved group without removing and re-adding it. Players in the group stay in it.
+- `/voicegroupmanager info` shows the version, voice chat status and your group setup. `/voicegroupmanager groups` lists the voice groups currently in use.
+- Click a group in `/persistentgroup list` or `/vgm groups` to copy its ID. The join summary now has hover tips.
+- Players are told when they are moved into a group by `/instantgroup`, `/forcejoingroup` or auto-join (turn off with `notify_moved_players: false`).
+- `message_format: MINIMESSAGE` in `config.yml` lets you use MiniMessage colours and gradients in `messages.yml`. `&` codes still work.
+- New permission `voicegroupmanager.info` (operators by default).
+
+### Fixed
+- `/instantgroup` has a maximum range (`max_instant_group_range`, default 256) instead of accepting any number.
+- `/instantgroup` and the join summary no longer reveal vanished players.
+- Auto-join now falls back to the global group when a player's personal group isn't available.
+- When a forced group type blocks a player's group, they get a message instead of nothing.
+- A group password of `true` or `false` can now be used by putting it in quotes.
+
+### Improved
+- Saving groups no longer pauses the server, even on slow disks.
+
 ## Voice Group Manager 1.2.0
 
 One jar, many versions: Voice Group Manager now supports Minecraft **1.21.1 through 26.3** on Paper and Purpur.

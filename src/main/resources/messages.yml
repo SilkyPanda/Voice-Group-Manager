@@ -1,4 +1,5 @@
-# Messages use '&' colour codes. {placeholders} are filled in by the plugin.
+# Messages use '&' colour codes (or MiniMessage tags if message_format is MINIMESSAGE in config.yml).
+# {placeholders} are filled in by the plugin.
 # Any key you delete falls back to the built-in default. Run /voicegroupmanager reload to apply changes.
 prefix: '&8[&aVoice Group Manager&8] &r'
 
@@ -10,9 +11,17 @@ no_permission: '&cYou do not have permission to do that.'
 group_not_found: '&cPersistent group not found.'
 usage: '&cUsage: {usage}'
 reloaded: '&aConfiguration and messages reloaded.'
+click_to_copy: '&7Click to copy the ID'
+
+# Sent to players who are moved into a group (see notify_moved_players in config.yml)
+moved_instant: '&7{player} added you to the voice group {group}.'
+moved_force: '&7{player} moved you into the voice group {group}.'
+moved_autojoin: '&7You were automatically added to the voice group {group}.'
+group_create_blocked: '&cYour group could not be created because this server forces a group type that could not be applied.'
 
 # /instantgroup
 invalid_range: '&cRange must be a number of at least 1.'
+range_too_large: '&cThe largest allowed range is {max} blocks.'
 instant_invalid_name: '&cInvalid instant_group_name in config.yml.'
 instant_created: '&aAdded {count} player(s) to {group}.'
 instant_existing: '&aAdded {count} player(s) to {group} (your current group).'
@@ -21,6 +30,8 @@ instant_existing: '&aAdded {count} player(s) to {group} (your current group).'
 persistent_none: 'There are no persistent groups.'
 persistent_entry: '&f{group} &7({type}{flags}) &8ID: {id}'
 persistent_created: '&aCreated persistent group {group} (ID {id}).'
+persistent_edited: '&aUpdated {group} ({property}).'
+persistent_edit_failed: '&cCould not update group: {error}'
 persistent_duplicate: '&cA persistent group named {group} already exists.'
 persistent_create_failed: '&cCould not create group: {error}'
 persistent_removed: '&aRemoved {group}.'
@@ -44,3 +55,17 @@ forcejoin_moved: '&aMoved {player} into your group.'
 summary_header: '&7There are currently {count} player(s) in voice groups:'
 summary_entry: '&8- &7{group}'
 summary_join: '&a[Join]'
+summary_entry_hover: '&7Type: &f{type}{flags}'
+summary_join_hover: '&7Click to join {group}'
+
+# /voicegroupmanager info and groups
+info_header: '&8--- &aVoice Group Manager {version} &8---'
+info_voicechat_online: '&7Simple Voice Chat: &fconnected'
+info_voicechat_offline: '&7Simple Voice Chat: &cnot connected'
+info_persistent: '&7Persistent groups: &f{saved} saved, {live} running'
+info_autojoin: '&7Global auto-join: &f{group}{force}'
+info_autojoin_none: '&7Global auto-join: &fnone'
+info_forced_type: '&7Forced group type: &f{type}'
+groups_header: '&7Voice groups with players online ({count}):'
+groups_none: '&7No online players are in a voice group.'
+groups_entry: '&f{group} &7({type}{flags}) &8- &f{members} player(s) &8ID: {id}'

@@ -6,17 +6,16 @@ depend: [voicechat]
 description: Server-side voice group management for Simple Voice Chat
 commands:
   voicegroupmanager:
-    description: Manage the Voice Group Manager plugin
-    usage: /voicegroupmanager reload
+    description: Reload the plugin or see its status and the voice groups in use
+    usage: /voicegroupmanager <reload|info|groups>
     aliases: [vgm]
-    permission: voicegroupmanager.reload
   instantgroup:
     description: Create or join an instant voice group with nearby players
     usage: /instantgroup [range]
     permission: voicegroupmanager.instantgroup
   persistentgroup:
     description: Manage persistent voice groups
-    usage: /persistentgroup <list|add|remove> [arguments]
+    usage: /persistentgroup <list|add|edit|remove> [arguments]
     permission: voicegroupmanager.persistentgroup
   autojoingroup:
     description: Configure personal or global automatic group joining
@@ -36,11 +35,12 @@ permissions:
       voicegroupmanager.autojoingroup.global: true
       voicegroupmanager.forcejoingroup: true
       voicegroupmanager.reload: true
+      voicegroupmanager.info: true
   voicegroupmanager.instantgroup:
     description: Use /instantgroup
-    default: true
+    default: op
   voicegroupmanager.persistentgroup:
-    description: Use /persistentgroup
+    description: Use /persistentgroup (list, add, edit, remove)
     default: op
   voicegroupmanager.autojoingroup:
     description: Use /autojoingroup for yourself
@@ -53,4 +53,7 @@ permissions:
     default: op
   voicegroupmanager.reload:
     description: Use /voicegroupmanager reload
+    default: op
+  voicegroupmanager.info:
+    description: Use /voicegroupmanager info and /voicegroupmanager groups
     default: op

@@ -42,6 +42,13 @@ final class SvcHook implements VoicechatPlugin {
         };
     }
 
+    /** The lower-case name of a group type: normal, open or isolated. */
+    static String typeName(Group.Type type) {
+        if (Group.Type.OPEN.equals(type)) return "open";
+        if (Group.Type.ISOLATED.equals(type)) return "isolated";
+        return "normal";
+    }
+
     /** Builds the live voice group for a saved one. Its voice-chat ID is always the saved ID. */
     static Group build(VoicechatServerApi api, SavedGroup saved) {
         return api.groupBuilder()

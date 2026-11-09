@@ -71,12 +71,12 @@ final class GroupStore {
         return findByName(value);
     }
 
-    /** Group names for tab completion; names with spaces are quoted. */
+    /** Group names for tab completion. Names Brigadier cannot read as a single plain word are quoted. */
     List<String> names() {
         return groups.values().stream()
                 .map(SavedGroup::name)
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .map(name -> name.contains(" ") ? "\"" + name + "\"" : name)
+                .map(name -> ArgParser.needsQuotes(name) ? "\"" + name + "\"" : name)
                 .toList();
     }
 

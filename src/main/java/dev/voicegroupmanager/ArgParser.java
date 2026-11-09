@@ -38,6 +38,18 @@ final class ArgParser {
         return tokenize(value).stream().map(Token::text).toList();
     }
 
+    /** True unless {@code value} is made only of characters Brigadier accepts in an unquoted word. */
+    static boolean needsQuotes(String value) {
+        if (value.isEmpty()) return true;
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            boolean plain = (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
+                    || c == '_' || c == '-' || c == '.' || c == '+';
+            if (!plain) return true;
+        }
+        return false;
+    }
+
     static String unquote(String value) {
         return value.replaceAll("^\"|\"$", "");
     }

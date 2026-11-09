@@ -20,17 +20,22 @@ Players do not install Voice Group Manager. Players who want to use voice chat s
 - Move another voice-connected player into your current group.
 - See at a glance which voice groups are in use with `/voicegroupmanager info` and `groups`.
 - Optionally force the group type used when players create groups through the SVC GUI.
+- Native Brigadier commands with live hints, typed arguments and tab completion.
 - Show players a join summary of visible voice groups, with click-to-join buttons, when they enter the server.
 - Tell players when they were moved into a group, and never pull vanished players into one.
 - Fully editable chat messages and prefix, reloadable without a restart. Supports `&` colour codes or MiniMessage.
 
 ## Commands
 
+Commands use Minecraft's own command system (Brigadier), so players see syntax hints and red error highlighting as they type, plus tab completion for group names, group types, players, `true`/`false` and ranges. Commands a player has no permission for are not shown to them. Subcommands are lowercase.
+
+Group names that contain anything other than letters, numbers and `_ - . +` (spaces included) must be put in double quotes, for example `"Staff Chat"` or `"Team!"`.
+
 | Command | What it does |
 |---|---|
 | `/instantgroup [range]` | Add nearby voice-connected players who are not already in a group to your current group. If you are not in a group, create an open temporary group. The range is a radius in blocks and defaults to 128; the largest allowed range is set by `max_instant_group_range`. Vanished players are skipped. Operators only by default. |
 | `/persistentgroup list` | List saved persistent groups. Click a line to copy that group's ID. |
-| `/persistentgroup add <name> [normal\|open\|isolated] [true\|false] [password]` | Create a persistent group. The optional `true`/`false` sets whether the group is hidden. Quote names with spaces, for example `/persistentgroup add "Staff Chat" open true`. Names must be unique. A quoted word is never treated as a type or the hidden flag, so `"true"` can be used as a password. |
+| `/persistentgroup add <name> [normal\|open\|isolated] [true\|false] [password]` | Create a persistent group. The optional `true`/`false` sets whether the group is hidden. For example `/persistentgroup add "Staff Chat" open true`. Names must be unique. A quoted word is never treated as a type or the hidden flag, so `"true"` can be used as a password. |
 | `/persistentgroup edit <name\|id> <name\|type\|hidden\|password> <value>` | Change one property of a saved group. Use `none` as the value to clear the password. Online members stay in the group. |
 | `/persistentgroup remove <name\|id>` | Remove a saved group, if Simple Voice Chat allows it. Any auto-join settings pointing at it are cleared. |
 | `/autojoingroup set <name> [password]` | Set your personal auto-join group. |

@@ -2,8 +2,8 @@ package dev.voicegroupmanager;
 
 import de.maxhenkel.voicechat.api.BukkitVoicechatService;
 import de.maxhenkel.voicechat.api.VoicechatServerApi;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -52,16 +52,9 @@ public final class VoiceGroupManagerPlugin extends JavaPlugin {
         store.load();
         getServer().getPluginManager().registerEvents(new JoinSummary(this), this);
 
-        Commands commands = new Commands(this);
-        for (String name : List.of("instantgroup", "persistentgroup", "autojoingroup", "forcejoingroup", "voicegroupmanager")) {
-            PluginCommand command = getCommand(name);
-            if (command == null) {
-                getLogger().warning("Command '" + name + "' is missing from plugin.yml.");
-                continue;
-            }
-            command.setExecutor(commands);
-            command.setTabCompleter(commands);
-        }
+        // Commands are Brigadier commands, registered when the server asks plugins for them.
+        CommandTree commands = new CommandTree(store, new CommandActions(this));
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> commands.register(event.registrar()));
 
         service.registerPlugin(hook);
         getLogger().info("Voice Group Manager enabled; voice features are available to players connected to Simple Voice Chat.");

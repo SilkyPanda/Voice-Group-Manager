@@ -1,28 +1,25 @@
 ## Voice Group Manager 1.3.0
 
-Edit persistent groups in place, see what is going on with `/vgm info`, and a round of fixes that make `/instantgroup` safer.
-
-### ⚠️ Upgrade notes
-- **`/instantgroup` is now operators-only by default.** Your existing `config.yml` keeps its old value, so if you want the new default set `permission_defaults.instantgroup: OPS` and run `/vgm reload`. You can still give the permission to anyone you like.
-- New settings are added to your `config.yml` and `messages.yml` automatically; nothing you changed is touched.
+### Upgrade notes
+- `/instantgroup` is now operators-only by default. Your existing `config.yml` keeps its old value; set `permission_defaults.instantgroup: OPS` to switch.
+- Group names with symbols (anything besides letters, numbers and `_ - . +`) must be in quotes, like `"Team!"`. Subcommands must be lowercase.
+- Players without permission no longer see these commands; Minecraft's "unknown command" replaces "no permission".
 
 ### New
-- `/persistentgroup edit <group> <name|type|hidden|password> <value>` changes a saved group without removing and re-adding it. Players in the group stay in it.
-- `/voicegroupmanager info` shows the version, voice chat status and your group setup. `/voicegroupmanager groups` lists the voice groups currently in use.
-- Click a group in `/persistentgroup list` or `/vgm groups` to copy its ID. The join summary now has hover tips.
-- Players are told when they are moved into a group by `/instantgroup`, `/forcejoingroup` or auto-join (turn off with `notify_moved_players: false`).
-- `message_format: MINIMESSAGE` in `config.yml` lets you use MiniMessage colours and gradients in `messages.yml`. `&` codes still work.
-- New permission `voicegroupmanager.info` (operators by default).
+- Commands show live hints and tab-complete as you type.
+- `/persistentgroup edit` changes a group's name, type, visibility or password.
+- `/vgm info` and `/vgm groups`. Click a group ID to copy it.
+- Players are told when they are moved into a group (`notify_moved_players`).
+- MiniMessage colours: set `message_format: MINIMESSAGE`.
 
 ### Fixed
-- `/instantgroup` has a maximum range (`max_instant_group_range`, default 256) instead of accepting any number.
-- `/instantgroup` and the join summary no longer reveal vanished players.
-- Auto-join now falls back to the global group when a player's personal group isn't available.
-- When a forced group type blocks a player's group, they get a message instead of nothing.
-- A group password of `true` or `false` can now be used by putting it in quotes.
+- `/instantgroup` has a range limit (`max_instant_group_range`) and no longer reveals vanished players.
+- Auto-join falls back to the global group when a personal group isn't available.
+- Players get a message when a forced group type blocks their group.
+- A group password of `true` or `false` works when quoted.
 
 ### Improved
-- Saving groups no longer pauses the server, even on slow disks.
+- Saving no longer pauses the server, and new settings are added to your `config.yml` automatically.
 
 ## Voice Group Manager 1.2.0
 

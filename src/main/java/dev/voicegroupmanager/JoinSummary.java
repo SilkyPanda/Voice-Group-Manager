@@ -13,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -55,7 +54,7 @@ final class JoinSummary implements Listener {
             String flags = group.hasPassword() ? ", password" : "";
             Component row = messages.render(messages.template("summary_entry"), "group", group.getName())
                     .hoverEvent(HoverEvent.showText(messages.render(messages.template("summary_entry_hover"),
-                            "type", group.getType().name().toLowerCase(Locale.ROOT), "flags", flags)));
+                            "type", SvcHook.typeName(group.getType()), "flags", flags)));
             if (!group.hasPassword()) {
                 Component join = messages.render(messages.template("summary_join"))
                         .clickEvent(ClickEvent.runCommand("/voicechat join " + group.getId()))

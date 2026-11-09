@@ -4,26 +4,6 @@ main: dev.voicegroupmanager.VoiceGroupManagerPlugin
 api-version: '1.21.1'
 depend: [voicechat]
 description: Server-side voice group management for Simple Voice Chat
-commands:
-  voicegroupmanager:
-    description: Reload the plugin or see its status and the voice groups in use
-    usage: /voicegroupmanager <reload|info|groups>
-    aliases: [vgm]
-  instantgroup:
-    description: Create or join an instant voice group with nearby players
-    usage: /instantgroup [range]
-    permission: voicegroupmanager.instantgroup
-  persistentgroup:
-    description: Manage persistent voice groups
-    usage: /persistentgroup <list|add|edit|remove> [arguments]
-    permission: voicegroupmanager.persistentgroup
-  autojoingroup:
-    description: Configure personal or global automatic group joining
-    usage: /autojoingroup <set|remove|global> [arguments]
-  forcejoingroup:
-    description: Move a player into your current voice group
-    usage: /forcejoingroup <player>
-    permission: voicegroupmanager.forcejoingroup
 permissions:
   voicegroupmanager.admin:
     description: Grants every Voice Group Manager permission, regardless of the defaults in config.yml

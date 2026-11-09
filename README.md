@@ -5,7 +5,6 @@ Voice Group Manager adds server-side management for [Simple Voice Chat](https://
 ## Requirements
 
 - A **Paper** or **Purpur** server running Minecraft **1.21.1 through 26.3**.
-- **Java 21** or newer for Minecraft 1.21.x servers, **Java 25** for Minecraft 26.x servers (the Java your server already requires).
 - The **Bukkit** version of Simple Voice Chat **2.6.24 or newer**, installed on the server, in a build that supports your Minecraft version.
 - Spigot and Folia are not supported.
 
@@ -54,18 +53,6 @@ Permission nodes:
 The default permission level of each command node is configurable in `config.yml`: `EVERYONE`, `OPS`, or `NOONE`. A permission plugin can also grant individual nodes. The same file controls the instant-group range and name, group summaries, and forced group type. All text, including the chat prefix, can be changed in `messages.yml`; any key you remove falls back to the built-in default.
 
 Persistent-group passwords are stored in plain text so the plugin can restore groups and use passwords for auto-join. Restrict access to the plugin data folder accordingly.
-
-## Building and testing
-
-The plugin is one jar for every supported version. It is compiled for Java 21 against the Paper 1.21.1 API, so it cannot use anything that is missing on the oldest supported version.
-
-```
-./gradlew build                          # jar in build/libs
-./gradlew runServer -PmcVersion=1.21.1   # start a Paper test server with Simple Voice Chat + this plugin
-./gradlew runServer -PmcVersion=26.3
-```
-
-Each version gets its own folder under `run/`. On the first start, accept the [Minecraft EULA](https://aka.ms/MinecraftEULA) in that folder's `eula.txt`.
 
 ## License & Credits
 

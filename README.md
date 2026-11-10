@@ -5,8 +5,7 @@ Voice Group Manager adds server-side management for [Simple Voice Chat](https://
 ## Requirements
 
 - A **Paper** or **Purpur** server running Minecraft **1.21.1 through 26.3**.
-- **Java 21** or newer for Minecraft 1.21.x servers, **Java 25** for Minecraft 26.x servers (the Java your server already requires).
-- The **Bukkit** version of Simple Voice Chat **2.6.24 or newer**, installed on the server, in a build that supports your Minecraft version.
+- The **Bukkit** version of Simple Voice Chat **2.6.24 or newer**, installed on the server.
 - Spigot and Folia are not supported.
 
 Players do not install Voice Group Manager. Players who want to use voice chat still need a compatible Simple Voice Chat client; clients using SVC-supported mod loaders can connect. Players without the SVC client can join Minecraft, but cannot use voice chat or voice-group features.
@@ -26,8 +25,6 @@ Players do not install Voice Group Manager. Players who want to use voice chat s
 - Fully editable chat messages and prefix, reloadable without a restart. Supports `&` colour codes or MiniMessage.
 
 ## Commands
-
-Commands use Minecraft's own command system (Brigadier), so players see syntax hints and red error highlighting as they type, plus tab completion for group names, group types, players, `true`/`false` and ranges. Commands a player has no permission for are not shown to them. Subcommands are lowercase.
 
 Group names that contain anything other than letters, numbers and `_ - . +` (spaces included) must be put in double quotes, for example `"Staff Chat"` or `"Team!"`.
 
@@ -73,23 +70,12 @@ Permission nodes:
 - `voicegroupmanager.info`
 - `voicegroupmanager.admin` — grants all of the nodes above, whatever the defaults in `config.yml` say.
 
-The default permission level of each command node is configurable in `config.yml`: `EVERYONE`, `OPS`, or `NOONE`. `/instantgroup` is `OPS` by default because it moves nearby players into a group. A permission plugin can also grant individual nodes. The same file controls the instant-group range, its maximum and name, group summaries, whether moved players are notified, the forced group type and the message format. After an update, new settings are added to your `config.yml` automatically with their defaults; your own values are never changed.
+The default permission level of each command node is configurable in `config.yml`: `EVERYONE`, `OPS`, or `NOONE`. A permission plugin can also grant individual nodes. The same file controls the instant-group range, its maximum and name, group summaries, whether moved players are notified, the forced group type and the message format.
 
 All text, including the chat prefix, can be changed in `messages.yml`; any key you remove falls back to the built-in default. By default messages use `&` colour codes. Set `message_format: MINIMESSAGE` in `config.yml` to use [MiniMessage](https://docs.advntr.dev/minimessage/format.html) tags such as `<green>` or `<gradient:red:blue>` instead; `&` codes keep working in that mode.
 
 Persistent-group passwords are stored in plain text so the plugin can restore groups and use passwords for auto-join. Restrict access to the plugin data folder accordingly. Passwords typed into commands can also appear in your server console and command logs.
 
-## Building and testing
-
-The plugin is one jar for every supported version. It is compiled for Java 21 against the Paper 1.21.1 API, so it cannot use anything that is missing on the oldest supported version.
-
-```
-./gradlew build                          # jar in build/libs
-./gradlew runServer -PmcVersion=1.21.1   # start a Paper test server with Simple Voice Chat + this plugin
-./gradlew runServer -PmcVersion=26.3
-```
-
-Each version gets its own folder under `run/`. On the first start, accept the [Minecraft EULA](https://aka.ms/MinecraftEULA) in that folder's `eula.txt`.
 
 ## License & Credits
 

@@ -17,7 +17,7 @@ Players do not install Voice Group Manager. Players who want to use voice chat s
 - Save persistent groups and restore them after server restarts.
 - Set personal or server-wide auto-join groups.
 - Edit a persistent group's name, type, visibility or password without recreating it.
-- Move another voice-connected player into your current group.
+- Move a voice-connected player into any running voice group, from in-game or the console.
 - See at a glance which voice groups are in use with `/voicegroupmanager info` and `groups`.
 - Optionally force the group type used when players create groups through the SVC GUI.
 - Native Brigadier commands with live hints, typed arguments and tab completion.
@@ -35,7 +35,7 @@ Group names that contain anything other than letters, numbers and `_ - . +` (spa
 |---|---|
 | `/instantgroup [range]` | Add nearby voice-connected players who are not already in a group to your current group. If you are not in a group, create an open temporary group. The range is a radius in blocks and defaults to 128; the largest allowed range is set by `max_instant_group_range`. Vanished players are skipped. Operators only by default. |
 | `/persistentgroup list` | List saved persistent groups. Click a line to copy that group's ID. |
-| `/persistentgroup add <name> [normal\|open\|isolated] [true\|false] [password]` | Create a persistent group. The optional `true`/`false` sets whether the group is hidden. For example `/persistentgroup add "Staff Chat" open true`. Names must be unique. A quoted word is never treated as a type or the hidden flag, so `"true"` can be used as a password. |
+| `/persistentgroup add <name> <normal\|open\|isolated> <true\|false> [password]` | Create a persistent group. The type and the `true`/`false` hidden flag are required, in that order; the password is optional and can be any text, including spaces. For example `/persistentgroup add "Staff Chat" open false` or `/persistentgroup add Staff isolated true hunter2`. Names must be unique. |
 | `/persistentgroup edit <name\|id> <name\|type\|hidden\|password> <value>` | Change one property of a saved group. Use `none` as the value to clear the password. Online members stay in the group. |
 | `/persistentgroup remove <name\|id>` | Remove a saved group, if Simple Voice Chat allows it. Any auto-join settings pointing at it are cleared. |
 | `/autojoingroup set <name> [password]` | Set your personal auto-join group. |
@@ -43,12 +43,22 @@ Group names that contain anything other than letters, numbers and `_ - . +` (spa
 | `/autojoingroup global set <name>` | Set the server-wide auto-join group. The group must not have a password. |
 | `/autojoingroup global remove` | Clear the server-wide auto-join group. |
 | `/autojoingroup global force <true\|false>` | Choose whether the server-wide setting overrides personal settings. |
-| `/forcejoingroup <player>` | Move an online player with an SVC connection into your current voice group. |
+| `/forcejoingroup <player> <group name or ID>` | Move an online player with an SVC connection into a running voice group, by saved-group name, group ID, or the name of a group that is currently in use. Works from the console too. The player's password check is skipped. |
 | `/voicegroupmanager reload` (alias `/vgm reload`) | Reload `config.yml` and `messages.yml`. |
 | `/voicegroupmanager info` | Show the plugin version, voice chat status, saved/running persistent groups, the global auto-join group and the forced group type. |
 | `/voicegroupmanager groups` | List the voice groups that online players are currently in, including hidden ones. Click a line to copy the group ID. |
 
 The group types are Simple Voice Chat's `normal`, `open`, and `isolated` types. In `config.yml`, `force_group_type` can be `OFF`, `NORMAL`, `OPEN`, or `ISOLATED`; it applies to groups created through the SVC GUI, not groups explicitly created with `/persistentgroup add`.
+
+### How auto-join works
+
+Auto-join puts a player into a persistent group automatically each time they connect to Simple Voice Chat (that is, when their voice chat connects after joining the server).
+
+- **Personal:** `/autojoingroup set <group> [password]` sets your own group. If the group has a password, give it once when you set it. `/autojoingroup remove` clears it.
+- **Global:** `/autojoingroup global set <group>` sets a group for everyone. It must not have a password. `/autojoingroup global remove` clears it.
+- **Force:** `/autojoingroup global force true` makes the global group override personal settings; with `false` (the default) a personal setting wins.
+
+When a player connects, the plugin picks the first running group from: the global group if force is on, then their personal group, then the global group. A group that isn't running is skipped. Only persistent groups can be used, players who don't use Simple Voice Chat are not affected, and players are told when they are moved unless `notify_moved_players` is `false`.
 
 ## Permissions and configuration
 

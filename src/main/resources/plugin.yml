@@ -29,7 +29,7 @@ permissions:
     description: Use /autojoingroup global
     default: op
   voicegroupmanager.forcejoingroup:
-    description: Use /forcejoingroup
+    description: Use /forcejoingroup to move a player into a voice group
     default: op
   voicegroupmanager.reload:
     description: Use /voicegroupmanager reload

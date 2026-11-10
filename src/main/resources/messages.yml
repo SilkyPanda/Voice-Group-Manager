@@ -47,9 +47,9 @@ autojoin_global_password: '&cGlobal auto-join groups cannot have a password.'
 autojoin_force_set: '&aForced global auto-join set to {value}.'
 
 # /forcejoingroup
-forcejoin_not_in_group: '&cYou are not connected to voice chat or not in a group.'
+forcejoin_group_not_found: '&cNo running voice group has that name or ID.'
 forcejoin_target_not_connected: '&cThat player is not connected to voice chat.'
-forcejoin_moved: '&aMoved {player} into your group.'
+forcejoin_moved: '&aMoved {player} into {group}.'
 
 # Join summary
 summary_header: '&7There are currently {count} player(s) in voice groups:'

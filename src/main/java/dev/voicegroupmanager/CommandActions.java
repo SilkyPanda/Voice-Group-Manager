@@ -15,9 +15,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static dev.voicegroupmanager.VoiceGroupManagerPlugin.GROUP_TYPES;
@@ -406,11 +408,8 @@ final class CommandActions {
 
     // ---- /forcejoingroup ----
 
-    void forceJoin(CommandSender sender, String targetName) {
-        if (!(sender instanceof Player executor)) {
-            playerOnly(sender);
-            return;
-        }
+    /** Moves {@code targetName} into the running group with the given name or ID. */
+    void forceJoin(CommandSender sender, String targetName, String groupQuery) {
         VoicechatServerApi api = plugin.voicechat();
         if (api == null) {
             unavailable(sender);
@@ -421,20 +420,62 @@ final class CommandActions {
             msg(sender, "player_offline");
             return;
         }
-        VoicechatConnection own = api.getConnectionOf(executor.getUniqueId());
-        VoicechatConnection other = api.getConnectionOf(target.getUniqueId());
-        Group group = own != null && own.isInGroup() ? own.getGroup() : null;
-        if (group == null) {
-            msg(sender, "forcejoin_not_in_group");
-            return;
-        }
-        if (other == null) {
+        VoicechatConnection connection = api.getConnectionOf(target.getUniqueId());
+        if (connection == null) {
             msg(sender, "forcejoin_target_not_connected");
             return;
         }
-        other.setGroup(group);
-        plugin.notifyMoved(target.getUniqueId(), "moved_force", "group", group.getName(), "player", executor.getName());
-        msg(sender, "forcejoin_moved", "player", target.getName());
+        Group group = findRunningGroup(api, groupQuery);
+        if (group == null) {
+            msg(sender, "forcejoin_group_not_found");
+            return;
+        }
+        connection.setGroup(group);
+        plugin.notifyMoved(target.getUniqueId(), "moved_force", "group", group.getName(), "player", sender.getName());
+        msg(sender, "forcejoin_moved", "player", target.getName(), "group", group.getName());
+    }
+
+    /** A running group by saved-group name or ID, by voice-chat group ID, or by the name of a group in use. */
+    private Group findRunningGroup(VoicechatServerApi api, String query) {
+        String value = ArgParser.unquote(query.trim()).trim();
+        SavedGroup saved = store.find(value);
+        if (saved != null) {
+            Group live = api.getGroup(saved.id());
+            if (live != null) return live;
+        }
+        try {
+            Group byId = api.getGroup(UUID.fromString(value));
+            if (byId != null) return byId;
+        } catch (IllegalArgumentException ignored) { }
+        for (Group group : groupsInUse(api).values()) {
+            if (group.getName().equalsIgnoreCase(value)) return group;
+        }
+        return null;
+    }
+
+    /** The groups that at least one online player is currently in. */
+    private Map<UUID, Group> groupsInUse(VoicechatServerApi api) {
+        Map<UUID, Group> groups = new LinkedHashMap<>();
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            VoicechatConnection connection = api.getConnectionOf(online.getUniqueId());
+            if (connection == null || !connection.isInGroup()) continue;
+            Group group = connection.getGroup();
+            if (group != null) groups.putIfAbsent(group.getId(), group);
+        }
+        return groups;
+    }
+
+    /** Saved group names plus the names of groups currently in use, for tab completion. */
+    List<String> forceJoinGroupSuggestions() {
+        Set<String> names = new LinkedHashSet<>(store.names());
+        VoicechatServerApi api = plugin.voicechat();
+        if (api != null) {
+            for (Group group : groupsInUse(api).values()) {
+                String name = group.getName();
+                names.add(ArgParser.needsQuotes(name) ? "\"" + name + "\"" : name);
+            }
+        }
+        return List.copyOf(names);
     }
 
     List<String> onlinePlayerNames() {

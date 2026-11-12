@@ -30,7 +30,7 @@ jobs:
       - name: Build plugin jar
         run: ./gradlew clean build
       - name: Upload plugin jar
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: VoiceGroupManager-${{ github.sha }}
           path: build/libs/VoiceGroupManager-*.jar

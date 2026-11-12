@@ -22,8 +22,6 @@ jobs:
             21
             25
       - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '9.5.1'
       - name: Boot a ${{ matrix.mc }} server
         run: |
           # Setting this property means you accept the Minecraft EULA: https://aka.ms/MinecraftEULA
@@ -33,7 +31,7 @@ jobs:
               sleep 3
             done
             sleep 5
-            echo stop ) | gradle runServer -PmcVersion=${{ matrix.mc }} \
+            echo stop ) | ./gradlew runServer -PmcVersion=${{ matrix.mc }} \
               -Dcom.mojang.eula.agree=true --console=plain \
               -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64 2>&1 | tee server.log
       - name: Check the plugin enabled

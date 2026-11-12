@@ -1,15 +1,16 @@
 plugins {
     id 'java'
-    // Downloads and starts a real Paper server with this plugin installed (see "Testing" in README).
+    // Downloads and starts a real Paper server with this plugin installed (see "Testing" below).
     id 'xyz.jpenilla.run-paper' version '3.0.2'
 }
 
-group = 'dev.voicegroupmanager'
-version = '1.3.0'
+base {
+    archivesName = 'VoiceGroupManager'
+}
 
 // The jar is compiled for Java 21 (the Java used by Minecraft 1.21.x servers). Java 25 servers
 // (Minecraft 26.x) run Java 21 class files without problems, so ONE jar covers every supported version.
-// The build itself still runs on a JDK 25 toolchain; `release = 21` stops the code from using
+// The build itself runs on a JDK 25 toolchain; `release = 21` stops the code from using
 // anything newer than Java 21.
 java {
     toolchain { languageVersion = JavaLanguageVersion.of(25) }
@@ -35,11 +36,17 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
-    filesMatching('plugin.yml') { expand(version: project.version) }
+    // Declaring the version as an input re-runs resource filtering whenever it changes.
+    def props = [version: project.version]
+    inputs.properties(props)
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') { expand(props) }
 }
 
-jar {
-    archiveBaseName = 'VoiceGroupManager'
+// Same sources produce a byte-for-byte identical jar.
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
 }
 
 // ---------------------------------------------------------------------------------------------

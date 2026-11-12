@@ -21,7 +21,7 @@ jobs:
           java-version: |
             21
             25
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - name: Boot a ${{ matrix.mc }} server
         run: |
           # Setting this property means you accept the Minecraft EULA: https://aka.ms/MinecraftEULA

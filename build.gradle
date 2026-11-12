@@ -26,7 +26,7 @@ dependencies {
     // Compile against the OLDEST supported Minecraft version. That way the compiler rejects any API
     // call that does not exist on 1.21.1, and newer servers keep running the same jar.
     // Purpur is a Paper fork, so the Paper API covers both servers.
-    compileOnly 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.245-stable'
     compileOnly 'de.maxhenkel.voicechat:voicechat-api:2.6.0'
 }
 

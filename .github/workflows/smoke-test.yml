@@ -24,7 +24,14 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Boot a ${{ matrix.mc }} server
         run: |
-          # Setting this property means you accept the Minecraft EULA: https://aka.ms/MinecraftEULA
+          # 1. Pre-create eula.txt so Minecraft doesn't prompt and exit immediately
+          mkdir -p run
+          echo "eula=true" > run/eula.txt
+
+          # Also create in root just in case runDirectory was customized to root
+          echo "eula=true" > eula.txt
+
+          # 2. Start the server and monitor the log
           : > server.log
           ( for i in $(seq 1 120); do
               grep -q 'Done (' server.log && break
@@ -32,7 +39,7 @@ jobs:
             done
             sleep 5
             echo stop ) | ./gradlew runServer -PmcVersion=${{ matrix.mc }} \
-              -Dcom.mojang.eula.agree=true --console=plain \
+              --console=plain \
               -Porg.gradle.java.installations.fromEnv=JAVA_HOME_21_X64,JAVA_HOME_25_X64 2>&1 | tee server.log
       - name: Check the plugin enabled
         run: |

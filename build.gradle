@@ -66,6 +66,7 @@ def testSvcVersion = providers.gradleProperty('svcVersion').getOrElse('bukkit-2.
 def testJavaVersion = testMcVersion.startsWith('1.') ? 21 : 25
 
 runServer {
+    jvmArgs '-Dcom.mojang.eula.agree=true'
     minecraftVersion(testMcVersion)
     runDirectory = layout.projectDirectory.dir("run/${testMcVersion}")
     javaLauncher = javaToolchains.launcherFor {

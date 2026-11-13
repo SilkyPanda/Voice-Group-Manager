@@ -28,7 +28,8 @@ import static dev.voicegroupmanager.VoiceGroupManagerPlugin.GROUP_TYPES;
  */
 final class CommandTree {
     private static final String FORCEJOIN_USAGE = "/forcejoingroup <player> <group name or ID>";
-    private static final String ADD_USAGE = "/persistentgroup add <name> <normal|open|isolated> <true|false> [password]";
+    private static final String DEFAULT_TYPE = "normal";
+    private static final String ADD_USAGE = "/persistentgroup add <name> [<normal|open|isolated> [<true|false> [password]]]";
 
     private final GroupStore store;
     private final CommandActions actions;
@@ -99,29 +100,30 @@ final class CommandTree {
     }
 
     /**
-     * add &lt;name&gt; &lt;normal|open|isolated&gt; &lt;true|false&gt; [password]
+     * add &lt;name&gt; [&lt;normal|open|isolated&gt; [&lt;true|false&gt; [password]]]
      *
-     * <p>Type and hidden are required, in that order, so the password can be any text. Stopping early
-     * shows the usage line instead of guessing.
+     * <p>Type and hidden are optional while no password is given: type defaults to normal and hidden to
+     * false. A password needs both in front of it, so it can be any text (including words that look like
+     * a type or a boolean).
      */
     private LiteralArgumentBuilder<CommandSourceStack> addNode() {
         RequiredArgumentBuilder<CommandSourceStack, String> name = Commands.argument("name", StringArgumentType.string())
-                .executes(usage(ADD_USAGE));
+                .executes(ctx -> add(ctx, DEFAULT_TYPE, false, null));
         for (String type : GROUP_TYPES) {
-            LiteralArgumentBuilder<CommandSourceStack> typeNode = Commands.literal(type).executes(usage(ADD_USAGE));
+            LiteralArgumentBuilder<CommandSourceStack> typeNode = Commands.literal(type)
+                    .executes(ctx -> add(ctx, type, false, null));
             typeNode.then(Commands.argument("hidden", BoolArgumentType.bool())
-                    .executes(ctx -> add(ctx, type, null))
+                    .executes(ctx -> add(ctx, type, BoolArgumentType.getBool(ctx, "hidden"), null))
                     .then(Commands.argument("password", StringArgumentType.greedyString())
-                            .executes(ctx -> add(ctx, type,
+                            .executes(ctx -> add(ctx, type, BoolArgumentType.getBool(ctx, "hidden"),
                                     cleanValue(StringArgumentType.getString(ctx, "password"))))));
             name.then(typeNode);
         }
         return Commands.literal("add").executes(usage(ADD_USAGE)).then(name);
     }
 
-    private int add(CommandContext<CommandSourceStack> ctx, String type, String password) {
-        actions.addGroup(sender(ctx), StringArgumentType.getString(ctx, "name"), type,
-                BoolArgumentType.getBool(ctx, "hidden"), password);
+    private int add(CommandContext<CommandSourceStack> ctx, String type, boolean hidden, String password) {
+        actions.addGroup(sender(ctx), StringArgumentType.getString(ctx, "name"), type, hidden, password);
         return Command.SINGLE_SUCCESS;
     }
 

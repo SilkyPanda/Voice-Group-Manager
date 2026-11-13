@@ -23,7 +23,7 @@ An unofficial **Paper & Purpur** port of [Simple Voice Chat Enhanced Groups](htt
 |---|---|
 | `/instantgroup [range]` | Add nearby voice-connected players who are not already in a group to your current group, or create an open temporary group if you are not in one. Radius in blocks defaults to `128` (capped by `max_instant_group_range`). Vanished players are skipped. Ops only by default. |
 | `/persistentgroup list` | List saved persistent groups. |
-| `/persistentgroup add <name> <normal\|open\|isolated> <true\|false> [password]` | Create a persistent group. The password is optional and may contain spaces (e.g. `/persistentgroup add "Staff Chat" open false` or `/persistentgroup add Staff isolated true hunter2`). Names must be unique. |
+| `/persistentgroup add <name> [<normal\|open\|isolated> [<true\|false> [password]]]` | Create a persistent group. Type and hidden are optional unless you set a password: type defaults to `normal` and hidden to `false`. A password needs both before it and may contain spaces (e.g. `/persistentgroup add Lobby`, `/persistentgroup add "Staff Chat" open`, or `/persistentgroup add Staff isolated true hunter2`). Names must be unique. |
 | `/persistentgroup edit <name\|id> <name\|type\|hidden\|password> <value>` | Edit one property of a saved group without losing online members. Use `none` as the value to remove a password. |
 | `/persistentgroup remove <name\|id>` | Remove a saved group (if Simple Voice Chat allows it) and clear any auto-join settings pointing to it. |
 | `/autojoingroup set <name> [password]` | Set your personal auto-join group. |

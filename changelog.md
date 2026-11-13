@@ -5,7 +5,7 @@ Move players into any group, edit groups in place, and commands that show live h
 Upgrade notes
 
 * `/instantgroup` is now operators-only by default. Your existing `config.yml` keeps its old value; set `permission_defaults.instantgroup: OPS` to switch.
-* `/persistentgroup add` now needs a type and a `true`/`false` hidden flag before the optional password: `/persistentgroup add <name> <normal|open|isolated> <true|false> [password]`.
+* `/persistentgroup add <name> [<normal|open|isolated> [<true|false> [password]]]`: type (default `normal`) and hidden (default `false`) are optional, but both must be given before a password.
 * `/forcejoingroup` now takes a group: `/forcejoingroup <player> <group name or ID>`. It no longer uses your current group, and it works from the console.
 * Group names with symbols (anything besides letters, numbers and `_ - . +`) must be in quotes, like `"Team!"`. Subcommands must be lowercase.
 * Players without permission no longer see these commands; Minecraft's "unknown command" replaces "no permission".

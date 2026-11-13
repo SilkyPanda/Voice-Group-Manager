@@ -1,25 +1,11 @@
 # Voice Group Manager
 
-An unofficial **Paper & Purpur** port of [Simple Voice Chat Enhanced Groups](https://github.com/henkelmax/enhanced-groups) — bringing server-side management for [Simple Voice Chat](https://modrinth.com/plugin/simple-voice-chat) groups to Bukkit-based servers: persistent groups that survive restarts, automatic group joining, instant nearby groups, and Paper-native admin tools.
-
-> **Server-side only:** Players do **not** install Voice Group Manager. Players using Simple Voice Chat on any supported client mod loader can use voice features, while vanilla players without the mod can still join your server normally.
+An unofficial **Paper & Purpur** port of [Simple Voice Chat Enhanced Groups](https://github.com/henkelmax/enhanced-groups) — bringing server-side management for [Simple Voice Chat](https://modrinth.com/plugin/simple-voice-chat) groups to Servers: persistent groups, automatic group joining, instant nearby groups, and admin tools.
 
 ## Requirements
 
 - **Server:** **Paper** or **Purpur** running Minecraft **1.21.1 through 26.3** *(Spigot and Folia are not supported)*
-- **Dependency:** The **Bukkit** version of [Simple Voice Chat](https://modrinth.com/plugin/simple-voice-chat) **2.6.24 or newer**
-
-## Quick Start
-
-1. Drop `VoiceGroupManager.jar` and Simple Voice Chat (`2.6.24+`) into your server's `plugins/` folder and restart.
-2. Create a persistent group that survives restarts:
-   ```text
-   /persistentgroup add "Lobby" open false
-   ```
-3. Automatically place everyone into it when their voice chat connects:
-   ```text
-   /autojoingroup global set "Lobby"
-   ```
+- **Dependency:** The **Bukkit** version of [Simple Voice Chat](https://modrinth.com/plugin/simple-voice-chat)
 
 ## Features
 
@@ -28,21 +14,16 @@ An unofficial **Paper & Purpur** port of [Simple Voice Chat Enhanced Groups](htt
 - **Instant Nearby Groups:** Group nearby voice-connected players in one command (`/instantgroup`) — ideal for events or impromptu conversations.
 - **Force Join:** Move any voice-connected player into any running group from in-game or the console (`/forcejoingroup`).
 - **Join Summary:** Greet joining players with a list of active, visible voice groups and one-click `[Join]` buttons.
-- **Forced Group Types:** Optionally enforce `NORMAL`, `OPEN`, or `ISOLATED` on groups created through the Simple Voice Chat client GUI.
-- **Live Admin Overview:** Inspect active groups and copy group IDs with one click via `/voicegroupmanager info` and `/voicegroupmanager groups`.
-- **Native Brigadier Commands:** Live syntax hints, typed arguments, and smart tab completion directly in chat.
-- **Vanish-Safe & Notifying:** Never pulls vanished players into instant groups or leaks them in join summaries, and notifies players when they are moved into a group.
-- **Fully Customizable Messages:** Edit every message and the chat prefix in `messages.yml` using `&` colour codes or [MiniMessage](https://docs.advntr.dev/minimessage/format.html), and reload without restarting.
+- **Forced Group Types:** Optionally enforce `NORMAL`, `OPEN`, or `ISOLATED` on groups.
+- **Live Admin Overview:** Inspect active groups via `/voicegroupmanager info` and `/voicegroupmanager groups`.
 
 ## Commands
-
-> **Tip:** Group names containing spaces or symbols other than letters, numbers, and `_ - . +` must be wrapped in double quotes — for example `"Staff Chat"` or `"Team!"`.
 
 | Command | What it does |
 |---|---|
 | `/instantgroup [range]` | Add nearby voice-connected players who are not already in a group to your current group, or create an open temporary group if you are not in one. Radius in blocks defaults to `128` (capped by `max_instant_group_range`). Vanished players are skipped. Ops only by default. |
-| `/persistentgroup list` | List saved persistent groups. Click a line to copy its group ID. |
-| `/persistentgroup add <name> <normal\|open\|isolated> <true\|false> [password]` | Create a persistent group. Type and the `true`/`false` hidden flag are required in that order; the password is optional and may contain spaces (e.g. `/persistentgroup add "Staff Chat" open false` or `/persistentgroup add Staff isolated true hunter2`). Names must be unique. |
+| `/persistentgroup list` | List saved persistent groups. |
+| `/persistentgroup add <name> <normal\|open\|isolated> <true\|false> [password]` | Create a persistent group. The password is optional and may contain spaces (e.g. `/persistentgroup add "Staff Chat" open false` or `/persistentgroup add Staff isolated true hunter2`). Names must be unique. |
 | `/persistentgroup edit <name\|id> <name\|type\|hidden\|password> <value>` | Edit one property of a saved group without losing online members. Use `none` as the value to remove a password. |
 | `/persistentgroup remove <name\|id>` | Remove a saved group (if Simple Voice Chat allows it) and clear any auto-join settings pointing to it. |
 | `/autojoingroup set <name> [password]` | Set your personal auto-join group. |
@@ -86,7 +67,6 @@ Groups that are not currently running are skipped. Players without the Simple Vo
 ### Configuration (`config.yml` & `messages.yml`)
 
 - **Permission Defaults:** Configure default access for command nodes in `config.yml` as `EVERYONE`, `OPS`, or `NOONE` (permission plugins like LuckPerms can still override individual nodes).
-- **Behavior Settings:** `config.yml` controls `default_instant_group_range`, `max_instant_group_range`, `instant_group_name`, `group_summary`, `notify_moved_players`, `force_group_type`, and `message_format`.
 - **Custom Messages:** All text and the chat prefix can be edited in `messages.yml` (deleted keys fall back to built-in defaults). Legacy `&` colour codes are used by default; set `message_format: MINIMESSAGE` in `config.yml` to use [MiniMessage](https://docs.advntr.dev/minimessage/format.html) tags such as `<green>` or `<gradient:red:blue>` (`&` codes continue working in MiniMessage mode too).
 
 > **Security note:** Persistent-group passwords are stored in plain text inside `persistent-groups.yml` so the plugin can restore groups on startup and validate auto-join settings. Restrict access to the plugin data folder accordingly, and keep in mind that passwords typed into commands may appear in your server console and command logs.

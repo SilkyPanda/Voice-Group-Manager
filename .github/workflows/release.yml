@@ -82,7 +82,7 @@ jobs:
               changelog: $changelog,
               version_type: "release",
               game_versions: $games,
-              loaders: ["paper", "purpur"],
+              loaders: ["paper", "purpur", "foila"],
               featured: true,
               dependencies: [{ project_id: "9eGKb6K1", dependency_type: "required" }],
               file_parts: ["file"],

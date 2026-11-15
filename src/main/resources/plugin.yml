@@ -3,6 +3,7 @@ version: '${version}'
 main: dev.voicegroupmanager.VoiceGroupManagerPlugin
 authors: [SilkyPanda]
 api-version: '1.21.1'
+folia-supported: true
 depend: [voicechat]
 description: Server-side voice group management for Simple Voice Chat
 permissions:

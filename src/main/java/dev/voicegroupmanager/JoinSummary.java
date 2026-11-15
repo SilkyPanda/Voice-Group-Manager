@@ -28,7 +28,8 @@ final class JoinSummary implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         if (!plugin.getConfig().getBoolean("group_summary", true)) return;
         Player player = event.getPlayer();
-        Bukkit.getScheduler().runTaskLater(plugin, () -> send(player), 20L);
+        // Runs on the joining player's own thread (their region thread on Folia).
+        player.getScheduler().runDelayed(plugin, task -> send(player), null, 20L);
     }
 
     private void send(Player joining) {

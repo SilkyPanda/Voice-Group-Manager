@@ -8,6 +8,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,6 +22,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static dev.voicegroupmanager.VoiceGroupManagerPlugin.GROUP_TYPES;
 
@@ -142,9 +145,34 @@ final class CommandActions {
             }
         }
 
+        // Other players may be in other regions on Folia, so each one is checked on its own thread. The
+        // results are then collected and applied on the sender's thread.
+        World world = player.getWorld();
+        Location center = player.getLocation();
+        double rangeSquared = range * range;
+        List<Player> candidates = new ArrayList<>(Bukkit.getOnlinePlayers());
+        List<Player> inRange = new CopyOnWriteArrayList<>();
+        AtomicInteger pending = new AtomicInteger(candidates.size());
+        Runnable probed = () -> {
+            if (pending.decrementAndGet() == 0) {
+                Scheduling.entity(plugin, player, () -> finishInstant(player, api, inRange));
+            }
+        };
+        for (Player candidate : candidates) {
+            Scheduling.entity(plugin, candidate, () -> {
+                if (candidate.getWorld().equals(world) && candidate.getLocation().distanceSquared(center) <= rangeSquared) {
+                    inRange.add(candidate);
+                }
+                probed.run();
+            }, probed);
+        }
+    }
+
+    /** Second half of /instantgroup; runs on the sender's thread once every nearby player has been checked. */
+    private void finishInstant(Player player, VoicechatServerApi api, List<Player> inRange) {
         VoicechatConnection own = api.getConnectionOf(player.getUniqueId());
         if (own == null) {
-            unavailable(sender);
+            unavailable(player);
             return;
         }
         Group target = own.isInGroup() ? own.getGroup() : null;
@@ -157,16 +185,13 @@ final class CommandActions {
                         .build();
                 created = true;
             } catch (RuntimeException e) {
-                msg(sender, "instant_invalid_name");
+                msg(player, "instant_invalid_name");
                 return;
             }
         }
 
-        double rangeSquared = range * range;
-        Location center = player.getLocation();
         int added = 0;
-        for (Player nearby : player.getWorld().getPlayers()) {
-            if (nearby.getLocation().distanceSquared(center) > rangeSquared) continue;
+        for (Player nearby : inRange) {
             if (Visibility.isHidden(player, nearby)) continue; // never reveal vanished players
             VoicechatConnection connection = api.getConnectionOf(nearby.getUniqueId());
             if (connection == null || connection.isInGroup()) continue;
@@ -181,7 +206,7 @@ final class CommandActions {
         if (created && added == 0) {
             api.removeGroup(target.getId()); // never leave an empty group behind
         }
-        msg(sender, created ? "instant_created" : "instant_existing",
+        msg(player, created ? "instant_created" : "instant_existing",
                 "count", String.valueOf(added), "group", target.getName());
     }
 

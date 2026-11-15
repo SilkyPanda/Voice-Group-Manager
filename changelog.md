@@ -17,6 +17,7 @@ New
 * `/vgm info` and `/vgm groups`. Click a group ID to copy it.
 * Players are told when they are moved into a group (`notify_moved_players`).
 * MiniMessage colours: set `message_format: MINIMESSAGE`.
+* Folia support. The same jar runs on Paper, Purpur and Folia.
 
 Fixed
 

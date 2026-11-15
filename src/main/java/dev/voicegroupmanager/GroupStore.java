@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Persistent groups and auto-join settings, kept in memory and saved to the plugin folder. */
@@ -160,10 +161,10 @@ final class GroupStore {
         }
         if (saveQueued.compareAndSet(false, true)) {
             try {
-                plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+                plugin.getServer().getAsyncScheduler().runDelayed(plugin, task -> {
                     saveQueued.set(false);
                     saveNow();
-                }, 20L);
+                }, 1, TimeUnit.SECONDS);
             } catch (RuntimeException e) {
                 saveQueued.set(false);
                 saveNow();

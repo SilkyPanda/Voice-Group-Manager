@@ -1,10 +1,10 @@
 # Voice Group Manager
 
-An unofficial **Paper & Purpur** port of [Simple Voice Chat Enhanced Groups](https://github.com/henkelmax/enhanced-groups) — bringing server-side management for [Simple Voice Chat](https://modrinth.com/plugin/simple-voice-chat) groups to Servers: persistent groups, automatic group joining, instant nearby groups, and admin tools.
+An unofficial **Paper, Purpur & Folia** port of [Simple Voice Chat Enhanced Groups](https://github.com/henkelmax/enhanced-groups) — bringing server-side management for [Simple Voice Chat](https://modrinth.com/plugin/simple-voice-chat) groups to Servers: persistent groups, automatic group joining, instant nearby groups, and admin tools.
 
 ## Requirements
 
-- **Server:** **Paper** or **Purpur** running Minecraft **1.21.1 through 26.3** *(Spigot and Folia are not supported)*
+- **Server:** **Paper**, **Purpur** or **Folia** running Minecraft **1.21.1 through 26.3** *(Spigot is not supported)*
 - **Dependency:** The **Bukkit** version of [Simple Voice Chat](https://modrinth.com/plugin/simple-voice-chat)
 
 ## Features

@@ -88,17 +88,11 @@ public final class VoiceGroupManagerPlugin extends JavaPlugin {
         return forcedType;
     }
 
-    /** Sends a message to an online player from any thread. */
+    /** Sends a message to an online player from any thread (on Folia, from the player's own region thread). */
     void tell(UUID player, String key, String... replacements) {
-        Runnable send = () -> {
-            Player online = Bukkit.getPlayer(player);
-            if (online != null) messages.send(online, key, replacements);
-        };
-        if (Bukkit.isPrimaryThread()) {
-            send.run();
-        } else if (isEnabled()) {
-            getServer().getScheduler().runTask(this, send);
-        }
+        Player online = Bukkit.getPlayer(player);
+        if (online == null) return;
+        Scheduling.entity(this, online, () -> messages.send(online, key, replacements));
     }
 
     /** Like {@link #tell}, but only when notify_moved_players is enabled. */

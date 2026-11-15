@@ -7,8 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,6 +120,9 @@ final class GroupStore {
         File dataFolder = plugin.getDataFolder();
         YamlConfiguration persistent = YamlConfiguration.loadConfiguration(new File(dataFolder, "persistent-groups.yml"));
         ConfigurationSection section = persistent.getConfigurationSection("groups");
+        // Groups saved by older versions have no creation time; the file's age is the best guess available.
+        File persistentFile = new File(dataFolder, "persistent-groups.yml");
+        Instant fallbackCreated = persistentFile.exists() ? Instant.ofEpochMilli(persistentFile.lastModified()) : Instant.now();
         if (section != null) {
             for (String key : section.getKeys(false)) {
                 try {
@@ -124,7 +130,8 @@ final class GroupStore {
                     ConfigurationSection g = section.getConfigurationSection(key);
                     if (g == null) continue;
                     groups.put(id, new SavedGroup(id, g.getString("name", ""), g.getString("password"),
-                            g.getString("type", "NORMAL"), g.getBoolean("hidden")));
+                            g.getString("type", "NORMAL"), g.getBoolean("hidden"),
+                            parseInstant(g.get("created"), fallbackCreated)));
                 } catch (IllegalArgumentException e) {
                     plugin.getLogger().warning("Ignoring invalid persistent group id: " + key);
                 }
@@ -178,9 +185,10 @@ final class GroupStore {
 
         YamlConfiguration persistent = new YamlConfiguration();
         groups.values().stream()
-                .sorted(Comparator.comparing((SavedGroup g) -> g.id().toString()))
+                .sorted(Comparator.comparing(SavedGroup::created).thenComparing(g -> g.id().toString()))
                 .forEach(g -> {
                     String path = "groups." + g.id();
+                    persistent.set(path + ".created", g.created().toString());
                     persistent.set(path + ".name", g.name());
                     persistent.set(path + ".password", g.password());
                     persistent.set(path + ".type", g.type());
@@ -211,6 +219,17 @@ final class GroupStore {
         } catch (IOException e) {
             plugin.getLogger().severe("Could not save " + target.getName() + ": " + e.getMessage());
             temp.delete();
+        }
+    }
+
+    /** Reads a creation time written as ISO-8601 text (the YAML parser may also hand back a Date). */
+    private static Instant parseInstant(Object value, Instant fallback) {
+        if (value instanceof Date date) return date.toInstant();
+        if (value == null) return fallback;
+        try {
+            return Instant.parse(value.toString());
+        } catch (DateTimeParseException e) {
+            return fallback;
         }
     }
 

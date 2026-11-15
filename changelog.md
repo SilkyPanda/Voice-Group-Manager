@@ -21,6 +21,8 @@ New
 
 Fixed
 
+* `force_group_type: OFF` no longer logs "Invalid force_group_type 'FALSE'" (YAML turns an unquoted `OFF` into `false`).
+* `persistent-groups.yml` is now ordered by creation time, and each group has a `created` timestamp. Existing groups get the file's last-modified time.
 * `/instantgroup` has a range limit (`max_instant_group_range`) and no longer reveals vanished players.
 * Auto-join falls back to the global group when a personal group isn't available.
 * Players get a message when a forced group type blocks their group.

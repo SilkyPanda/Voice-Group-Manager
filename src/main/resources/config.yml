@@ -25,7 +25,7 @@ message_format: LEGACY
 # Force the group type used for groups created through the Simple Voice Chat GUI.
 # Options: OFF (do not force), NORMAL, OPEN, ISOLATED.
 # This does not override the type explicitly selected by /persistentgroup add.
-force_group_type: OFF
+force_group_type: "OFF"
 
 # Default access for each command permission node below.
 # Options: EVERYONE (all players), OPS (server operators), NOONE (disabled by default).

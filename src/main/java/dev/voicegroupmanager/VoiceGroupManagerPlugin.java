@@ -111,6 +111,8 @@ public final class VoiceGroupManagerPlugin extends JavaPlugin {
         messages.load();
 
         String type = getConfig().getString("force_group_type", "OFF").trim().toUpperCase(Locale.ROOT);
+        // YAML reads an unquoted OFF as the boolean false, so "FALSE" is how a plain `force_group_type: OFF` arrives.
+        if (type.equals("FALSE")) type = "OFF";
         if (!type.equals("OFF") && !GROUP_TYPES.contains(type.toLowerCase(Locale.ROOT))) {
             getLogger().warning("Invalid force_group_type '" + type + "' in config.yml; use OFF, NORMAL, OPEN or ISOLATED. Using OFF.");
             type = "OFF";

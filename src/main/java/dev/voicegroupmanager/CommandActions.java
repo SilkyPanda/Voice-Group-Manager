@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -257,7 +258,7 @@ final class CommandActions {
         }
 
         UUID id = UUID.randomUUID();
-        SavedGroup draft = new SavedGroup(id, name, password, type.toUpperCase(Locale.ROOT), hidden);
+        SavedGroup draft = new SavedGroup(id, name, password, type.toUpperCase(Locale.ROOT), hidden, Instant.now());
         Group group;
         try {
             group = SvcHook.build(api, draft);
